@@ -1,0 +1,71 @@
+index.html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>ตรวจสอบสถานะพัสดุ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+    .box {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    input, button {
+      padding: 10px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .status {
+      margin-top: 20px;
+    }
+    .timeline {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+<title>ตรวจสอบสถานะพัสดุ (Demo)</title>
+    <input
+      id="tracking"
+      placeholder="กรอกหมายเลขพัสดุ"
+    />
+    <button onclick="checkTracking()">ตรวจสอบ</button>
+
+    <div id="result" class="status"></div>
+  </div>
+
+  <script>
+    function checkTracking() {
+      const tracking = document.getElementById("tracking").value;
+      const result = document.getElementById("result");
+
+      // เลขพัสดุตัวอย่าง (demo)
+      if (tracking === "YT2602300703535122") {
+        result.innerHTML = `
+          <p><strong>สถานะ:</strong> ตีกลับผู้ส่ง</p>
+          <p><strong>อัปเดตล่าสุด:</strong> 7 ก.พ. 2026</p>
+          <div class="timeline">
+            • 07/02/2026 – ไม่สามารถจัดส่งได้ (ที่อยู่ไม่ครบ)<br>
+            • 06/02/2026 – ถึงศูนย์กระจายปลายทาง (US)<br>
+            • 30/01/2026 – ผ่านพิธีการศุลกากร<br>
+            • 23/01/2026 – รับข้อมูลการจัดส่ง
+          </div>
+        `;
+      } else {
+        result.innerHTML = "<p>❌ ไม่พบข้อมูลพัสดุ</p>";
+      }
+    }
+  </script>
+
+</body>
+</html>
