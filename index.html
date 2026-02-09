@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ตรวจสอบสถานะพัสดุ</title>
+  <style>
+    body { font-family: sans-serif; background:#f5f5f5; padding:40px; }
+    .box { max-width:600px; margin:auto; background:white; padding:20px; border-radius:8px; }
+    input, button { padding:10px; width:100%; margin-top:10px; }
+    .status { margin-top:20px; }
+    .timeline { margin-top:10px; font-size:14px; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>ตรวจสอบสถานะพัสดุ</h2>
+
+  <input id="tracking" placeholder="กรอกหมายเลขพัสดุ">
+  <button onclick="checkTracking()">ตรวจสอบ</button>
+
+  <div id="result" class="status"></div>
+</div>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbzLcXTG8GnyhbDTdG2oMPMa3BbveVUixMdJ5mMpxE0ercE8MX_b2KMsAwrJGD3f9sF_/exec";
+
+  async function checkTracking() {
+    const tracking = document.getElementById("tracking").value.trim();
+    const result = document.getElementById("result");
+
+    if (!tracking) {
+      result.innerHTML = "<p>กรุณากรอกหมายเลขพัสดุ</p>";
+      return;
+    }
+
+    result.innerHTML = "<p>กำลังตรวจสอบ...</p>";
+
+    try {
+      const res = await fetch(API_URL + "?code=" + tracking);
+      const json = await res.json();
+
+      if (!json.ok) {
+        result.innerHTML = "<p>❌ ไม่พบข้อมูลพัสดุ</p>";
+        return;
+      }
+
+      const d = json.data;
+
+      const timeline = (d.timeline || "").replace(/\n/g, "<br>");
+
+      result.innerHTML = `
+        <p><strong>สถานะ:</strong> ${d.status_th}</p>
+        <p><strong>อัปเดตล่าสุด:</strong> ${d.last_update}</p>
+        <div class="timeline">${timeline}</div>
+        ${d.note ? <p><strong>หมายเหตุ:</strong> ${d.note}</p> : ""}
+      `;
+    } catch (e) {
+      result.innerHTML = "<p>เกิดข้อผิดพลาด</p>";
+    }
+  }
+</script>
+
+</body>
+</html>
