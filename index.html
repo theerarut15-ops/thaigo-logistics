@@ -21,18 +21,18 @@
         return;
       }
 
-      const d = json.data;
+      const d = json.data || {};
       const timeline = (d.timeline || "").replace(/\n/g, "<br>");
 
       result.innerHTML = `
         <p><strong>สถานะ:</strong> ${d.status_th || "-"}</p>
         <p><strong>อัปเดตล่าสุด:</strong> ${d.last_update || "-"}</p>
-        <div class="timeline">${timeline || "-"}</div>
+        <div class="timeline">${timeline}</div>
         ${d.note ? <p><strong>หมายเหตุ:</strong> ${d.note}</p> : ""}
       `;
     } catch (e) {
-      result.innerHTML = "<p>เกิดข้อผิดพลาด</p>";
+      result.innerHTML = "<p>เกิดข้อผิดพลาด (เชื่อมต่อไม่ได้)</p>";
+      console.error(e);
     }
   }
 </script>
-
