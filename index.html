@@ -145,11 +145,16 @@ const d = data.data || {};
 const timeline = (d.timeline || "").replace(/\n/g, "<br>");
 
 result.innerHTML = `
+<p><b>ชื่อผู้รับ:</b> ${d.customer_name || "-"}</p>
+<p><b>ประเทศปลายทาง:</b> ${d.destination || "-"}</p>
+<p><b>Last Mile:</b> ${d.last_mile || "-"}</p>
+
 <p><b>สถานะ:</b> ${d.status_th || "-"}</p>
 <p><b>อัปเดตล่าสุด:</b> ${d.last_update || "-"}</p>
 <div class="timeline">${timeline}</div>
 ${d.note ? `<p><b>หมายเหตุ:</b> ${d.note}</p>` : ""}
 `;
+
 
 } catch (error) {
 result.innerHTML = "เกิดข้อผิดพลาด";
