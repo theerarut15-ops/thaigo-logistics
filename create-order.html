@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>สร้างรายการส่งพัสดุ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body style="font-family:Arial;padding:20px;max-width:500px;margin:auto;">
+
+<h2>สร้างรายการส่งพัสดุ</h2>
+
+<label>ชื่อผู้ส่ง</label>
+<input type="text" id="customer_name" style="width:100%;padding:8px;margin-bottom:10px;">
+
+<label>เบอร์โทร</label>
+<input type="text" id="phone" style="width:100%;padding:8px;margin-bottom:10px;">
+
+<label>ประเทศปลายทาง (เช่น AU)</label>
+<input type="text" id="destination" style="width:100%;padding:8px;margin-bottom:10px;">
+
+<label>น้ำหนัก (กรัม)</label>
+<input type="number" id="weight" style="width:100%;padding:8px;margin-bottom:15px;">
+
+<button onclick="submitOrder()" style="padding:12px;width:100%;background:#0f2c59;color:white;border:none;border-radius:8px;">
+ส่งข้อมูล
+</button>
+
+<p id="result" style="margin-top:15px;"></p>
+
+<script>
+const API_URL = "ใส่ลิงก์ Apps Script /exec ของคุณตรงนี้";
+
+async function submitOrder(){
+  const data = {
+    customer_name: document.getElementById("customer_name").value,
+    phone: document.getElementById("phone").value,
+    destination: document.getElementById("destination").value,
+    estimated_weight: document.getElementById("weight").value
+  };
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  const json = await res.json();
+  document.getElementById("result").innerText = json.message || "ส่งสำเร็จ";
+}
+</script>
+
+</body>
+</html>
