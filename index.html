@@ -1,529 +1,122 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ThaiGo Logistics International | Tracking Portal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ThaiGo Logistics | Tracking</title>
 
-  <style>
-    :root{
-      --navy:#0f2c59;
-      --navy2:#123a75;
-      --ink:#0b1b33;
-      --muted:#6b7a90;
-      --bg1:#e9f1fb;
-      --bg2:#d7e4f7;
-      --card:#ffffff;
-      --line:#cfd8e3;
-      --soft:#f4f7fb;
-      --ok:#0a7a3c;
-      --warn:#a05a00;
-      --err:#b00020;
-      --shadow: 0 20px 45px rgba(0,0,0,.12);
-      --shadow2: 0 10px 25px rgba(0,0,0,.08);
-      --radius: 20px;
-    }
-
-    body{
+<style>
+body{
   margin:0;
-  min-height:100vh;
-  padding:80px 20px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-
-  background: linear-gradient(180deg, #0b2a52 0%, #071a33 100%);
-
+  font-family:Arial, sans-serif;
+  background:#0b2a52;
+  padding:40px 15px;
 }
-
-    }
-
-    .wrap{ max-width: 820px; margin: 0 auto; }
-
-    .header{ text-align:center; margin-bottom: 18px; }
-
-    .brandRow{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom: 10px;
-    }
-
-    .brand{
-      display:inline-flex;
-      align-items:center;
-      gap:14px;
-      padding:14px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.55);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(8px);
-    }
-
-    .logo{
-      width:86px;
-      height:86px;
-      object-fit:contain;
-      border-radius:18px;
-      background:#fff;
-      padding:10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.10);
-    }
-
-    .brandText{ text-align:left; line-height:1.15; }
-    .brandName{ font-size:18px; font-weight:800; letter-spacing:.2px; color:var(--navy); }
-    .brandTag{ font-size:12.5px; color:var(--muted); margin-top:6px; }
-
-    .langSwitch{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background: rgba(255,255,255,.55);
-      border: 1px solid rgba(15,44,89,.15);
-      border-radius: 999px;
-      padding: 8px 10px;
-      box-shadow: var(--shadow2);
-    }
-    .langBtn{
-      border:none;
-      background:transparent;
-      padding: 6px 10px;
-      border-radius: 999px;
-      cursor:pointer;
-      font-weight:700;
-      color: var(--navy);
-      font-size: 13px;
-    }
-    .langBtn.active{
-      background: rgba(15,44,89,.12);
-    }
-
-    .box{
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 34px;
-      position: relative;
-      overflow:hidden;
-    }
-
-    .topStripe{
-      position:absolute;
-      top:0; left:0; right:0;
-      height:6px;
-      background: linear-gradient(90deg, var(--navy), #2b6cb0, #4aa3ff);
-      opacity:.95;
-    }
-
-    h2{
-      margin: 10px 0 6px;
-      text-align:center;
-      font-size: 28px;
-      color: var(--navy);
-      letter-spacing:.2px;
-    }
-
-    .sub{
-      text-align:center;
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
-
-    .divider{
-      height:1px;
-      background: linear-gradient(90deg, transparent, rgba(15,44,89,.25), transparent);
-      margin: 18px 0 22px;
-    }
-
-    .grid{ display:grid; grid-template-columns: 1fr; gap: 12px; }
-
-    .fieldLabel{
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    input{
-      width:100%;
-      padding: 14px 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      font-size: 16px;
-      outline:none;
-      background:#fff;
-    }
-
-    input:focus{
-      border-color: var(--navy);
-      box-shadow: 0 0 0 4px rgba(15,44,89,.12);
-    }
-
-    .actions{
-      display:flex;
-      gap: 12px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-
-    button{
-      flex: 1 1 220px;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor:pointer;
-      transition:.2s;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-    }
-
-    .btnPrimary{ background: var(--navy); color:#fff; }
-    .btnPrimary:hover{ background: var(--navy2); }
-
-    .btnGhost{
-      background: #eef3fb;
-      color: var(--navy);
-      border: 1px solid rgba(15,44,89,.18);
-    }
-    .btnGhost:hover{ background:#e6eefb; }
-
-    .spinner{
-      width:18px; height:18px;
-      border: 3px solid rgba(255,255,255,.35);
-      border-top-color:#fff;
-      border-radius:50%;
-      animation: spin .8s linear infinite;
-      display:none;
-    }
-    .btnPrimary.loading .spinner{ display:inline-block; }
-    @keyframes spin{ to{ transform: rotate(360deg);} }
-
-    .status{
-      margin-top: 22px;
-      padding: 18px;
-      background: var(--soft);
-      border-left: 6px solid var(--navy);
-      border-radius: 14px;
-      font-size: 15px;
-      display:none;
-    }
-    .status.show{ display:block; }
-
-    .kv{
-      display:grid;
-      grid-template-columns: 190px 1fr;
-      gap: 6px 10px;
-      margin: 6px 0 2px;
-    }
-    .k{ color: var(--muted); font-size: 13.5px; }
-    .v{ font-weight: 650; color: var(--ink); }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12.5px;
-      font-weight: 800;
-      background: rgba(15,44,89,.08);
-      color: var(--navy);
-      margin: 10px 0 6px;
-    }
-    .badge.ok{ background: rgba(10,122,60,.10); color: var(--ok); }
-    .badge.warn{ background: rgba(160,90,0,.12); color: var(--warn); }
-    .badge.err{ background: rgba(176,0,32,.10); color: var(--err); }
-
-    .timeline{
-      margin-top: 12px;
-      font-size: 14px;
-      line-height: 1.65;
-      color: #223a5e;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(15,44,89,.25);
-      word-break: break-word;
-    }
-
-    .footer{
-      text-align:center;
-      margin-top: 18px;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-    .footer b{ color: var(--navy); }
-
-    @media (max-width: 560px){
-      .box{ padding: 22px; }
-      .kv{ grid-template-columns: 1fr; }
-      .brandText{ display:none; }
-    }
-  </style>
+.wrap{
+  max-width:600px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+}
+input{
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+}
+button{
+  padding:12px;
+  width:100%;
+  background:#0f2c59;
+  color:white;
+  border:none;
+  border-radius:6px;
+}
+.status{
+  margin-top:20px;
+  padding:15px;
+  background:#f3f6fb;
+  border-radius:8px;
+}
+.badge{
+  font-weight:bold;
+  margin-bottom:10px;
+}
+.kv{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:6px;
+}
+.timeline{
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
 
-    <div class="header">
-      <div class="brandRow">
-        <div class="brand">
-          <!-- ✅ เปลี่ยนชื่อไฟล์โลโก้ให้ตรงกับใน repo -->
-          <img src="S__42147848.jpg" class="logo" alt="ThaiGo Logistics" />
-          <div class="brandText">
-            <div class="brandName">ThaiGo Logistics International</div>
-            <div class="brandTag" id="brandTag">Global Shipping • Tracking Portal</div>
-          </div>
-        </div>
+<div class="wrap">
+  <h2>ตรวจสอบสถานะพัสดุ</h2>
 
-        <div class="langSwitch" aria-label="language switch">
-          <button class="langBtn active" id="btnTH" onclick="setLang('th')">TH</button>
-          <button class="langBtn" id="btnEN" onclick="setLang('en')">EN</button>
-        </div>
+  <input id="tracking" placeholder="กรอกเลขพัสดุ เช่น TG0001">
+
+  <button onclick="checkTracking()" id="btnCheck">ตรวจสอบ</button>
+
+  <div id="result" class="status" style="display:none;"></div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzJfvJkZln9YacGZ0sRzfkn7E1zFUEooUC1HIcUQJ-iAsSAcWjQsxUyTzcKxJCnKjt3/exec";
+
+async function checkTracking(){
+  const code = document.getElementById("tracking").value.trim();
+  const result = document.getElementById("result");
+
+  if(!code){
+    result.style.display="block";
+    result.innerHTML="กรุณากรอกเลขพัสดุ";
+    return;
+  }
+
+  result.style.display="block";
+  result.innerHTML="กำลังตรวจสอบ...";
+
+  try{
+    const res = await fetch(API_URL + "?code=" + encodeURIComponent(code));
+    const json = await res.json();
+
+    if(!json.ok){
+      result.innerHTML=json.message;
+      return;
+    }
+
+    const d = json.data;
+
+    result.innerHTML=`
+      <div class="badge">${d.status_th || "-"}</div>
+
+      <div class="kv">
+        <div>ชื่อผู้รับ</div>
+        <div>${d.customer_name || "-"}</div>
+
+        <div>ประเทศปลายทาง</div>
+        <div>${d.destination || "-"}</div>
+
+        <div>สถานะ</div>
+        <div>${d.status_th || "-"}</div>
       </div>
-    </div>
 
-    <div class="box">
-      <div class="topStripe"></div>
-
-      <h2 id="titleText">ตรวจสอบสถานะพัสดุ</h2>
-      <div class="sub" id="subText">กรอกเลข Tracking เพื่อดูสถานะล่าสุด • ลูกค้า • ประเทศปลายทาง</div>
-
-      <div class="divider"></div>
-
-      <div class="grid">
-        <div>
-          <div class="fieldLabel" id="labelTracking">Tracking Number</div>
-          <input id="tracking" placeholder="เช่น YT2603..." autocomplete="off" />
-        </div>
-
-        <div class="actions">
-          <button class="btnPrimary" id="btnCheck" onclick="checkTracking()">
-            <span class="spinner" aria-hidden="true"></span>
-            <span class="btnText" id="btnCheckText">ตรวจสอบ</span>
-          </button>
-
-          <button class="btnGhost" onclick="clearForm()" id="btnClear">ล้างข้อมูล</button>
-        </div>
-
-        <div id="result" class="status"></div>
+      <div class="timeline">
+        ${ (d.timeline || "-").replace(/\\n/g,"<br>") }
       </div>
-    </div>
-
-    <div class="footer">
-      © <span id="y"></span> <b>ThaiGo Logistics International</b> • <span id="poweredBy">Powered by Tracking DB</span>
-    </div>
-
-  </div>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzJfvJkZln9YacGZ0sRzfkn7E1zFUEooUC1HIcUQJ-iAsSAcWjQsxUyTzcKxJCnKjt3/exec";
-
-    document.getElementById("y").textContent = new Date().getFullYear();
-
-    // ====== 2 ภาษา ======
-    const T = {
-      th: {
-        brandTag: "โลจิสติกส์อินเตอร์ • ระบบติดตามพัสดุ",
-        title: "ตรวจสอบสถานะพัสดุ",
-        sub: "กรอกเลข Tracking เพื่อดูสถานะล่าสุด • ลูกค้า • ประเทศปลายทาง",
-        labelTracking: "เลขพัสดุ (Tracking)",
-        phTracking: "เช่น YT2603...",
-        btnCheck: "ตรวจสอบ",
-        btnClear: "ล้างข้อมูล",
-        poweredBy: "ระบบติดตามพัสดุ",
-        msgNeed: "กรุณากรอก Tracking Number",
-        msgChecking: "กำลังตรวจสอบ...",
-        msgNotFound: "ไม่พบข้อมูลพัสดุ",
-        msgError: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
-        delivered: "ส่งสำเร็จ",
-        inTransit: "กำลังขนส่ง",
-        attention: "โปรดตรวจสอบ",
-        k_customer: "ชื่อผู้รับ",
-        k_destination: "ประเทศปลายทาง",
-        k_lastmile: "Last Mile",
-        k_status: "สถานะ",
-        k_updated: "อัปเดตล่าสุด",
-        k_note: "หมายเหตุ"
-      },
-      en: {
-        brandTag: "Logistics International • Tracking Portal",
-        title: "Track Shipment Status",
-        sub: "Enter tracking number to view latest status • customer • destination",
-        labelTracking: "Tracking Number",
-        phTracking: "e.g. YT2603...",
-        btnCheck: "Check",
-        btnClear: "Clear",
-        poweredBy: "Tracking System",
-        msgNeed: "Please enter a tracking number",
-        msgChecking: "Checking...",
-        msgNotFound: "No shipment data found",
-        msgError: "Connection error",
-        delivered: "Delivered",
-        inTransit: "In Transit",
-        attention: "Attention",
-        k_customer: "Customer",
-        k_destination: "Destination",
-        k_lastmile: "Last Mile",
-        k_status: "Status",
-        k_updated: "Last update",
-        k_note: "Note"
-      }
-    };
-
-    let LANG = "th";
-
-    function setLang(lang){
-      LANG = lang;
-      document.getElementById("btnTH").classList.toggle("active", lang==="th");
-      document.getElementById("btnEN").classList.toggle("active", lang==="en");
-
-      document.getElementById("brandTag").textContent = T[lang].brandTag;
-      document.getElementById("titleText").textContent = T[lang].title;
-      document.getElementById("subText").textContent = T[lang].sub;
-      document.getElementById("labelTracking").textContent = T[lang].labelTracking;
-      document.getElementById("tracking").placeholder = T[lang].phTracking;
-      document.getElementById("btnCheckText").textContent = T[lang].btnCheck;
-      document.getElementById("btnClear").textContent = T[lang].btnClear;
-      document.getElementById("poweredBy").textContent = T[lang].poweredBy;
-
-      // ถ้ามีผลลัพธ์แสดงอยู่ ให้กดตรวจสอบใหม่จะเปลี่ยนภาษาในผลลัพธ์ทันที
-    }
-
-    // ====== ธงประเทศ ======
-    // แนะนำให้ใส่ใน Google Sheet เป็นโค้ดประเทศ 2 ตัว เช่น AU, US, CA, NZ, GB, TH
-    function countryCodeFromDestination(dest){
-      if(!dest) return "";
-      const d = String(dest).trim().toUpperCase();
-
-      // ถ้าเป็น 2 ตัวอยู่แล้ว
-      if(/^[A-Z]{2}$/.test(d)) return d;
-
-      // ชื่อประเทศที่เจอบ่อย (เพิ่มเองได้)
-      const map = {
-        "AUSTRALIA":"AU",
-        "AUS":"AU",
-        "UNITED STATES":"US",
-        "USA":"US",
-        "AMERICA":"US",
-        "CANADA":"CA",
-        "NEW ZEALAND":"NZ",
-        "UNITED KINGDOM":"GB",
-        "UK":"GB",
-        "THAILAND":"TH",
-        "HONG KONG":"HK",
-        "SINGAPORE":"SG",
-        "TAIWAN":"TW",
-        "JAPAN":"JP",
-        "KOREA":"KR",
-        "SOUTH KOREA":"KR",
-        "CHINA":"CN"
-      };
-      return map[d] || "";
-    }
-
-    function flagEmojiFromCode(code){
-      if(!code || !/^[A-Z]{2}$/.test(code)) return "";
-      const A = 0x1F1E6;
-      const first = code.charCodeAt(0) - 65 + A;
-      const second = code.charCodeAt(1) - 65 + A;
-      return String.fromCodePoint(first, second);
-    }
-
-    function destinationWithFlag(dest) {
-  if(!dest) return "-";
-  const code = String(dest).trim().toUpperCase();
-  const flag = flagEmojiFromCode(code);
-  return flag ? `${flag}` : code;
+    `;
+  }
+  catch(err){
+    result.innerHTML="เกิดข้อผิดพลาดในการเชื่อมต่อ";
+  }
 }
+</script>
 
-    // ====== UI helpers ======
-    function setLoading(isLoading){
-      const btn = document.getElementById("btnCheck");
-      if(isLoading){
-        btn.classList.add("loading");
-        btn.disabled = true;
-      }else{
-        btn.classList.remove("loading");
-        btn.disabled = false;
-      }
-    }
-
-    function clearForm(){
-      document.getElementById("tracking").value = "";
-      const result = document.getElementById("result");
-      result.className = "status";
-      result.innerHTML = "";
-      result.style.display = "none";
-    }
-
-    document.getElementById("tracking").addEventListener("keydown", (e)=>{
-      if(e.key === "Enter") checkTracking();
-    });
-
-    function badgeForStatus(text){
-      const t = (text || "").toLowerCase();
-      if(t.includes("deliver") || t.includes("ส่งสำเร็จ") || t.includes("delivered"))
-        return {cls:"ok", label: (LANG==="th"?T.th.delivered:T.en.delivered)};
-      if(t.includes("hold") || t.includes("ตีกลับ") || t.includes("problem") || t.includes("exception"))
-        return {cls:"err", label: (LANG==="th"?T.th.attention:T.en.attention)};
-      return {cls:"warn", label: (LANG==="th"?T.th.inTransit:T.en.inTransit)};
-    }
-
-    async function checkTracking() {
-      const tracking = document.getElementById("tracking").value.trim();
-      const result = document.getElementById("result");
-
-      result.style.display = "block";
-      result.classList.add("show");
-
-      if (!tracking) {
-        result.innerHTML = `<span class="badge err">${T[LANG].msgNeed}</span>`;
-        return;
-      }
-
-      result.innerHTML = `<span class="badge warn">${T[LANG].msgChecking}</span>`;
-      setLoading(true);
-
-      try {
-        const response = await fetch(API_URL + "?code=" + encodeURIComponent(tracking));
-        const data = await response.json();
-
-        if (!data.ok) {
-          result.innerHTML = `<span class="badge err">${T[LANG].msgNotFound}</span>`;
-          return;
-        }
-
-        const d = data.data || {};
-        const timeline = (d.timeline || "").replace(/\n/g, "<br>");
-        const badge = badgeForStatus(d.status_th);
-
-        result.innerHTML = `
-          <div class="badge ${badge.cls}">${badge.label}</div>
-
-          <div class="kv">
-            <div class="k">${T[LANG].k_customer}</div><div class="v">${d.customer_name || "-"}</div>
-            <div class="k">${T[LANG].k_destination}</div><div class="v">${destinationWithFlag(d.destination)}</div>
-            <div class="k">${T[LANG].k_lastmile}</div><div class="v">${d.last_mile || "-"}</div>
-            <div class="k">${T[LANG].k_status}</div><div class="v">${d.status_th || "-"}</div>
-            <div class="k">${T[LANG].k_updated}</div><div class="v">${d.last_update || "-"}</div>
-          </div>
-
-          <div class="timeline">${timeline || "-"}</div>
-          ${d.note ? `<div style="margin-top:12px;color:#233b62;"><b>${T[LANG].k_note}:</b> ${d.note}</div>` : ""}
-        `;
-
-      } catch (error) {
-        result.innerHTML = `<span class="badge err">${T[LANG].msgError}</span>`;
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    // เริ่มต้นภาษาไทย
-    setLang("th");
-  </script>
 </body>
 </html>
