@@ -2,54 +2,110 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ThaiGo Logistics | Tracking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThaiGo Logistics International | Tracking Portal</title>
 
 <style>
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:#0b2a52;
-  padding:40px 15px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(180deg,#0b2a52,#071a33);
+  color:#0f2c59;
 }
+
 .wrap{
-  max-width:600px;
+  max-width:900px;
   margin:auto;
-  background:white;
-  padding:25px;
-  border-radius:12px;
+  padding:60px 20px;
 }
+
+.header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+  margin-bottom:30px;
+}
+
+.logo{
+  width:90px;
+  height:90px;
+  border-radius:20px;
+  background:white;
+  padding:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.brand{
+  background:rgba(255,255,255,.8);
+  padding:20px 30px;
+  border-radius:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,.2);
+}
+
+.brand h1{
+  margin:0;
+  font-size:20px;
+}
+
+.card{
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
 input{
   width:100%;
-  padding:10px;
-  margin-bottom:12px;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:16px;
 }
+
 button{
-  padding:12px;
+  margin-top:15px;
   width:100%;
+  padding:14px;
   background:#0f2c59;
   color:white;
   border:none;
-  border-radius:6px;
-}
-.status{
-  margin-top:20px;
-  padding:15px;
-  background:#f3f6fb;
-  border-radius:8px;
-}
-.badge{
+  border-radius:10px;
+  font-size:16px;
   font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#123a75;
+}
+
+.result{
+  margin-top:25px;
+  padding:20px;
+  background:#f4f7fb;
+  border-radius:15px;
+  display:none;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 12px;
+  background:#0f2c59;
+  color:white;
+  border-radius:999px;
   margin-bottom:10px;
 }
-.kv{
-  display:grid;
-  grid-template-columns:140px 1fr;
-  gap:6px;
-}
+
 .timeline{
   margin-top:10px;
   font-size:14px;
+  white-space:pre-line;
 }
 </style>
 </head>
@@ -57,23 +113,29 @@ button{
 <body>
 
 <div class="wrap">
-  <h2>ตรวจสอบสถานะพัสดุ</h2>
 
-  <input id="tracking" placeholder="กรอกเลขพัสดุ เช่น TG0001">
+<div class="header">
+</div>
 
-  <button onclick="checkTracking()" id="btnCheck">ตรวจสอบ</button>
+<div class="card">
+<h2>ตรวจสอบสถานะพัสดุ</h2>
 
-  <div id="result" class="status" style="display:none;"></div>
+<input id="tracking" placeholder="กรอกเลขพัสดุ เช่น TG0001">
+<button onclick="checkTracking()">ตรวจสอบ</button>
+
+<div id="result" class="result"></div>
+
+</div>
 </div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzJfvJkZln9YacGZ0sRzfkn7E1zFUEooUC1HIcUQJ-iAsSAcWjQsxUyTzcKxJCnKjt3/exec";
 
 async function checkTracking(){
-  const code = document.getElementById("tracking").value.trim();
+  const tracking = document.getElementById("tracking").value.trim();
   const result = document.getElementById("result");
 
-  if(!code){
+  if(!tracking){
     result.style.display="block";
     result.innerHTML="กรุณากรอกเลขพัสดุ";
     return;
@@ -83,7 +145,7 @@ async function checkTracking(){
   result.innerHTML="กำลังตรวจสอบ...";
 
   try{
-    const res = await fetch(API_URL + "?code=" + encodeURIComponent(code));
+    const res = await fetch(API_URL + "?code=" + tracking);
     const json = await res.json();
 
     if(!json.ok){
@@ -95,24 +157,12 @@ async function checkTracking(){
 
     result.innerHTML=`
       <div class="badge">${d.status_th || "-"}</div>
-
-      <div class="kv">
-        <div>ชื่อผู้รับ</div>
-        <div>${d.customer_name || "-"}</div>
-
-        <div>ประเทศปลายทาง</div>
-        <div>${d.destination || "-"}</div>
-
-        <div>สถานะ</div>
-        <div>${d.status_th || "-"}</div>
-      </div>
-
-      <div class="timeline">
-        ${ (d.timeline || "-").replace(/\\n/g,"<br>") }
-      </div>
+      <div><b>ชื่อผู้รับ:</b> ${d.customer_name || "-"}</div>
+      <div><b>ประเทศปลายทาง:</b> ${d.destination || "-"}</div>
+      <div class="timeline">${d.timeline || "-"}</div>
     `;
   }
-  catch(err){
+  catch(e){
     result.innerHTML="เกิดข้อผิดพลาดในการเชื่อมต่อ";
   }
 }
