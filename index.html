@@ -6,73 +6,75 @@
 <title>ThaiGo Logistics International | Tracking Portal</title>
 
 <style>
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   background:#0f2c59;
 }
 
+/* ===== CONTAINER ===== */
 .container{
-  max-width:1200px;
-  margin:60px auto;
-  padding:0 20px;
+  max-width:700px;
+  margin:auto;
+  padding:20px;
 }
 
+/* ===== HEADER ===== */
 .header-box{
-  background:#cfd6df;
+  background:#ffffff;
   border-radius:20px;
-  padding:30px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:20px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
 .logo{
-  width:110px;
-  height:110px;
+  width:90px;
+  height:90px;
+  border-radius:15px;
   background:#fff;
-  border-radius:20px;
-  padding:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,.15);
-  object-fit:contain;
+  padding:10px;
+  margin:auto;
+  display:block;
 }
 
 .title-box h1{
-  margin:0;
-  font-size:26px;
+  margin:15px 0 5px;
+  font-size:20px;
   color:#0f2c59;
 }
 
 .title-box p{
-  margin:5px 0 0;
-  color:#4b5b70;
+  margin:0;
   font-size:14px;
+  color:#6b7c93;
 }
 
+/* ===== TRACKING BOX ===== */
 .tracking-box{
-  background:#e9edf2;
+  background:#ffffff;
   border-radius:25px;
-  margin-top:40px;
-  padding:40px;
+  margin-top:25px;
+  padding:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
 .tracking-box h2{
   text-align:center;
-  margin:0;
-  font-size:32px;
+  margin:0 0 10px;
+  font-size:22px;
   color:#0f2c59;
 }
 
 .tracking-box p{
   text-align:center;
-  margin:10px 0 30px;
-  color:#5c6c80;
+  font-size:14px;
+  color:#6b7c93;
+  margin-bottom:20px;
 }
 
 input{
@@ -81,22 +83,18 @@ input{
   border-radius:12px;
   border:1px solid #ccd4dd;
   font-size:16px;
+  margin-bottom:15px;
 }
 
-.button-row{
-  display:flex;
-  gap:20px;
-  margin-top:20px;
-}
-
-.button-row button{
-  flex:1;
+button{
+  width:100%;
   padding:15px;
   border:none;
   border-radius:12px;
   font-size:16px;
   font-weight:600;
   cursor:pointer;
+  margin-bottom:10px;
 }
 
 .btn-primary{
@@ -105,37 +103,57 @@ input{
 }
 
 .btn-secondary{
-  background:#c9cfd7;
+  background:#e1e6ec;
 }
 
+/* ===== RESULT BOX ===== */
 .result-box{
-  margin-top:30px;
-  background:#fff;
-  padding:25px;
-  border-radius:15px;
+  background:#f4f6f9;
+  border-radius:20px;
+  padding:20px;
+  margin-top:20px;
   display:none;
+}
+
+.status-badge{
+  display:inline-block;
+  padding:8px 15px;
+  border-radius:30px;
+  font-weight:600;
+  margin-bottom:15px;
 }
 
 .status-success{
   background:#28a745;
   color:#fff;
-  padding:8px 15px;
-  border-radius:8px;
-  display:inline-block;
-  margin-bottom:10px;
 }
 
-@media(max-width:768px){
-  .header-box{
-    flex-direction:column;
-    gap:20px;
-    text-align:center;
+.info-block{
+  margin-bottom:15px;
+  font-size:15px;
+  color:#34495e;
+}
+
+.timeline-item{
+  padding:10px 0;
+  border-bottom:1px solid #ddd;
+  font-size:14px;
+  line-height:1.5;
+  word-break:break-word;
+}
+
+/* ===== DESKTOP ===== */
+@media(min-width:768px){
+  .container{
+    padding:40px;
   }
-  .header-left{
-    flex-direction:column;
+
+  .title-box h1{
+    font-size:26px;
   }
-  .button-row{
-    flex-direction:column;
+
+  .tracking-box h2{
+    font-size:26px;
   }
 }
 </style>
@@ -146,28 +164,23 @@ input{
 <div class="container">
 
   <div class="header-box">
-    <div class="header-left">
-      <img src="S__42147848.jpg" class="logo">
-      <div class="title-box">
-        <h1>ThaiGo Logistics International</h1>
-        <p>โลจิสติกส์อินเตอร์ • ระบบติดตามพัสดุ</p>
-      </div>
+    <img src="S__42147848.jpg" class="logo">
+    <div class="title-box">
+      <h1>ThaiGo Logistics International</h1>
+      <p>โลจิสติกส์อินเตอร์ • ระบบติดตามพัสดุ</p>
     </div>
   </div>
 
   <div class="tracking-box">
     <h2>ตรวจสอบสถานะพัสดุ</h2>
-    <p>กรอกเลข Tracking เพื่อดูสถานะล่าสุด • ลูกค้า • ประเทศปลายทาง</p>
+    <p>กรอกเลข Tracking เพื่อดูสถานะล่าสุด</p>
 
     <input id="trackingInput" placeholder="เช่น TG0001">
 
-    <div class="button-row">
-      <button class="btn-primary" onclick="checkTracking()">ตรวจสอบ</button>
-      <button class="btn-secondary" onclick="clearData()">ล้างข้อมูล</button>
-    </div>
+    <button class="btn-primary" onclick="checkTracking()">ตรวจสอบ</button>
+    <button class="btn-secondary" onclick="clearData()">ล้างข้อมูล</button>
 
-    <div id="resultBox" class="result-box"></div>
-
+    <div class="result-box" id="resultBox"></div>
   </div>
 
 </div>
@@ -183,35 +196,38 @@ function checkTracking(){
   }
 
   fetch(API_URL + "?code=" + code)
-  .then(res => res.json())
-  .then(data => {
-      if(data.ok && data.data.tracking_no){
+    .then(res => res.json())
+    .then(data => {
 
-          let statusHTML = "";
-
-          if(data.data.status_th === "จัดส่งสำเร็จ"){
-            statusHTML = `<div class="status-success">${data.data.status_th}</div>`;
-          }else{
-            statusHTML = `<div>${data.data.status_th}</div>`;
-          }
-
-          document.getElementById("resultBox").innerHTML = `
-            ${statusHTML}
-            <p><strong>ชื่อลูกค้า:</strong> ${data.data.customer_name}</p>
-            <p><strong>ประเทศ:</strong> ${data.data.destination}</p>
-            <hr>
-            <pre>${data.data.timeline}</pre>
-          `;
-
-          document.getElementById("resultBox").style.display = "block";
-
-      }else{
+      if(!data.ok){
         alert("ไม่พบข้อมูล");
+        return;
       }
-  })
-  .catch(err=>{
-    alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
-  });
+
+      const result = data.data;
+
+      let timelineHTML = "";
+      if(result.timeline){
+        const lines = result.timeline.split("\n");
+        lines.forEach(line=>{
+          timelineHTML += `<div class="timeline-item">${line}</div>`;
+        });
+      }
+
+      document.getElementById("resultBox").innerHTML = `
+        <div class="status-badge status-success">${result.status_th}</div>
+        <div class="info-block"><strong>ชื่อลูกค้า:</strong> ${result.customer_name}</div>
+        <div class="info-block"><strong>ประเทศ:</strong> ${result.destination}</div>
+        <hr>
+        ${timelineHTML}
+      `;
+
+      document.getElementById("resultBox").style.display = "block";
+
+    })
+    .catch(err=>{
+      alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+    });
 }
 
 function clearData(){
