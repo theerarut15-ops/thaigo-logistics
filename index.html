@@ -1,59 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>ThaiGo Tracking</title>
-<style>
-body{font-family:sans-serif;background:#0f2c59;margin:0;padding:40px;color:#000}
-.box{background:#fff;padding:30px;border-radius:15px;max-width:600px;margin:auto}
-button{padding:12px 20px;border:none;border-radius:8px;background:#0f2c59;color:#fff;cursor:pointer}
-input{padding:12px;width:100%;margin-bottom:15px}
-.success{background:#e6f7ed;border-left:6px solid #28a745;padding:15px;margin-top:15px}
-</style>
-</head>
-<body>
-
-<div class="box">
-<h2>ตรวจสอบสถานะพัสดุ</h2>
-<input id="code" placeholder="เช่น TG0001">
-<button onclick="check()">ตรวจสอบ</button>
-<div id="result"></div>
-</div>
-
 <script>
-const API="https://script.google.com/macros/s/AKfycbzJfvJkZln9YacGZ0sRzfkn7E1zFUEooUC1HIcUQJ-iAsSAcWjQsxUyTzcKxJCnKjt3/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzJfvJkZln9YacGZ0sRzfkn7E1zFUEooUC1HIcUQJ-iAsSAcWjQsxUyTzcKxJCnKjt3/exec";
 
-async function check(){
-let c=document.getElementById("code").value.trim();
-if(!c){alert("กรอกเลขก่อน");return;}
+async function checkTracking() {
+  const trackingNo = document.getElementById("trackingInput").value.trim();
+  const resultBox = document.getElementById("resultBox");
 
-let r=document.getElementById("result");
-r.innerHTML="กำลังโหลด...";
+  if (!trackingNo) {
+    alert("กรุณากรอกเลข Tracking");
+    return;
+  }
 
-try{
-let res=await fetch(API+"?code="+encodeURIComponent(c));
-let j=await res.json();
+  resultBox.innerHTML = "กำลังตรวจสอบ...";
 
-if(!j.ok || !j.data.tracking_no){
-r.innerHTML="ไม่พบข้อมูล";
-return;
+  try {
+    const response = await fetch(`${API_URL}?code=${trackingNo}`);
+    const json = await response.json();
+
+    if (!json.ok || !json.data) {
+      resultBox.innerHTML = "<div class='status error'>ไม่พบข้อมูล</div>";
+      return;
+    }
+
+    const data = json.data;
+
+    const statusText = data.status_th || "ไม่มีข้อมูลสถานะ";
+    const customer = data.customer_name || "-";
+    const destination = data.destination || "-";
+    const timeline = data.timeline || "-";
+
+    let statusClass = "status";
+
+    if (statusText && statusText.includes("จัดส่งสำเร็จ")) {
+      statusClass += " success";
+    }
+
+    resultBox.innerHTML = `
+      <div class="${statusClass}">${statusText}</div>
+      <div><b>ชื่อลูกค้า:</b> ${customer}</div>
+      <div><b>ประเทศ:</b> ${destination}</div>
+      <div class="timeline">${timeline}</div>
+    `;
+
+  } catch (err) {
+    resultBox.innerHTML = "<div class='status error'>เกิดข้อผิดพลาดในการเชื่อมต่อ</div>";
+  }
 }
 
-let d=j.data;
-let html="<div class='success'>";
-html+="<b>สถานะ:</b> "+d.status_th+"<br>";
-html+="<b>ลูกค้า:</b> "+d.customer_name+"<br>";
-html+="<b>ประเทศ:</b> "+d.destination+"<br><br>";
-html+=d.timeline.replace(/\n/g,"<br>");
-html+="</div>";
-
-r.innerHTML=html;
-
-}catch(e){
-r.innerHTML="เชื่อมต่อไม่ได้";
-}
+function clearData() {
+  document.getElementById("trackingInput").value = "";
+  document.getElementById("resultBox").innerHTML = "";
 }
 </script>
-
-</body>
-</html>
