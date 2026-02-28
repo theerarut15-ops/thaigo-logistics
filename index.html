@@ -1,206 +1,53 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ThaiGo Logistics International | Tracking Portal</title>
-
-<style>
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background:#0f2c59;
-}
-
-.container{
-  max-width:1200px;
-  margin:60px auto;
-  padding:0 20px;
-}
-
-.header-box{
-  background:#cfd6df;
-  border-radius:20px;
-  padding:30px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:20px;
-}
-
-.logo{
-  width:110px;
-  height:110px;
-  background:#fff;
-  border-radius:20px;
-  padding:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,.15);
-}
-
-.title-box h1{
-  margin:0;
-  font-size:26px;
-  color:#0f2c59;
-}
-
-.title-box p{
-  margin:5px 0 0;
-  color:#4b5b70;
-  font-size:14px;
-}
-
-.tracking-box{
-  background:#e9edf2;
-  border-radius:25px;
-  margin-top:40px;
-  padding:40px;
-}
-
-.tracking-box h2{
-  text-align:center;
-  margin:0;
-  font-size:32px;
-  color:#0f2c59;
-}
-
-.tracking-box p{
-  text-align:center;
-  margin:10px 0 30px;
-  color:#5c6c80;
-}
-
-input{
-  width:100%;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #ccd4dd;
-  font-size:16px;
-}
-
-.button-row{
-  display:flex;
-  gap:20px;
-  margin-top:20px;
-}
-
-.button-row button{
-  flex:1;
-  padding:15px;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.btn-primary{
-  background:#0f2c59;
-  color:#fff;
-}
-
-.btn-secondary{
-  background:#c9cfd7;
-}
-
-.status-box{
-  margin-top:30px;
-  padding:20px;
-  border-radius:15px;
-  background:#ffffff;
-  display:none;
-}
-
-.status-success{
-  background:#e6f7ed;
-  border-left:6px solid #28a745;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <div class="header-box">
-    <div class="header-left">
-      <img src="S__42147848.jpg" class="logo">
-      <div class="title-box">
-        <h1>ThaiGo Logistics International</h1>
-        <p>โลจิสติกส์อินเตอร์ • ระบบติดตามพัสดุ</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="tracking-box">
-    <h2>ตรวจสอบสถานะพัสดุ</h2>
-    <p>กรอกเลข Tracking เพื่อดูสถานะล่าสุด • ลูกค้า • ประเทศปลายทาง</p>
-
-    <input id="trackingInput" placeholder="เช่น TG0001">
-
-    <div class="button-row">
-      <button class="btn-primary" onclick="checkTracking()">ตรวจสอบ</button>
-      <button class="btn-secondary" onclick="clearData()">ล้างข้อมูล</button>
-    </div>
-
-    <div id="resultBox" class="status-box"></div>
-  </div>
-
-</div>
-
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzJfvJkZln9YacGZ0sRzfkn7E1zFUEooUC1HIcUQJ-iAsSAcWjQsxUyTzcKxJCnKjt3/exec";
 
-async function checkTracking(){
-  const code = document.getElementById("trackingInput").value.trim();
-  const box = document.getElementById("resultBox");
+async function checkTracking() {
+  const trackingNo = document.getElementById("trackingInput").value.trim();
+  const resultBox = document.getElementById("resultBox");
 
-  if(!code){
-    alert("กรุณากรอก Tracking Number");
+  if (!trackingNo) {
+    alert("กรุณากรอกเลข Tracking");
     return;
   }
 
-  box.style.display="block";
-  box.innerHTML="กำลังโหลด...";
+  resultBox.innerHTML = "กำลังตรวจสอบ...";
 
-  try{
-    const res = await fetch(API_URL + "?code=" + encodeURIComponent(code));
-    const data = await res.json();
+  try {
+    const response = await fetch(`${API_URL}?code=${trackingNo}`);
+    const json = await response.json();
 
-    if(!data.ok || !data.data.tracking_no){
-      box.innerHTML="ไม่พบข้อมูลพัสดุ";
+    if (!json.ok || !json.data) {
+      resultBox.innerHTML = "<div class='status error'>ไม่พบข้อมูล</div>";
       return;
     }
 
-    const d = data.data;
+    const data = json.data;
 
-    let statusHtml = `<b>สถานะ:</b> ${d.status_th}<br>
-                      <b>ชื่อลูกค้า:</b> ${d.customer_name}<br>
-                      <b>ประเทศ:</b> ${d.destination}<br><br>
-                      <b>Timeline:</b><br>${d.timeline.replace(/\n/g,"<br>")}`;
+    const statusText = data.status_th || "ไม่มีข้อมูลสถานะ";
+    const customer = data.customer_name || "-";
+    const destination = data.destination || "-";
+    const timeline = data.timeline || "-";
 
-    if(d.status_th.includes("สำเร็จ")){
-      box.className="status-box status-success";
-    }else{
-      box.className="status-box";
+    let statusClass = "status";
+
+    if (statusText && statusText.includes("จัดส่งสำเร็จ")) {
+      statusClass += " success";
     }
 
-    box.innerHTML=statusHtml;
+    resultBox.innerHTML = `
+      <div class="${statusClass}">${statusText}</div>
+      <div><b>ชื่อลูกค้า:</b> ${customer}</div>
+      <div><b>ประเทศ:</b> ${destination}</div>
+      <div class="timeline">${timeline}</div>
+    `;
 
-  }catch(err){
-    box.innerHTML="เกิดข้อผิดพลาดในการเชื่อมต่อ";
+  } catch (err) {
+    resultBox.innerHTML = "<div class='status error'>เกิดข้อผิดพลาดในการเชื่อมต่อ</div>";
   }
 }
 
-function clearData(){
-  document.getElementById("trackingInput").value="";
-  document.getElementById("resultBox").style.display="none";
+function clearData() {
+  document.getElementById("trackingInput").value = "";
+  document.getElementById("resultBox").innerHTML = "";
 }
 </script>
-
-</body>
-</html>
